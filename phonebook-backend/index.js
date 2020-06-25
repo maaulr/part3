@@ -1,9 +1,14 @@
+require('dotenv').config()
 const express = require('express')
+const mongoose = require('mongoose')
 const morgan = require('morgan')
 const cors = require('cors')
 const app = express()
 const PORT = process.env.PORT || 3001
 const baseUrl = '/api/persons'
+const dbUrl = process.env.MONGODB_URI
+const dbName = 'fullstack-phonebook'
+const personModel = require('./models/person')
 
 app.use(express.json())
 app.use(morgan('short'))
@@ -34,7 +39,9 @@ let persons = [
 ]
 
 app.get('/api/persons', (req, res)=>{
-    res.json(persons)
+    personModel.find().then(persons=>{
+        res.json(persons)
+    })
 })
 
 app.post('/api/persons', (req, res)=>{
