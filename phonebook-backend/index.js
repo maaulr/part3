@@ -1,10 +1,14 @@
 const express = require('express')
 const morgan = require('morgan')
+const cors = require('cors')
 const app = express()
-const PORT = 3001
+const PORT = process.env.PORT || 3001
+const baseUrl = '/api/persons'
 
 app.use(express.json())
 app.use(morgan('short'))
+app.use(cors())
+app.use(express.static('build'))
 
 let persons = [
     {
@@ -35,7 +39,7 @@ app.get('/api/persons', (req, res)=>{
 
 app.post('/api/persons', (req, res)=>{
     const body = req.body
-    const personExist = persons.find((person)=>person.id === id)
+    const personExist = persons.find((person)=>person.name === body.name)
     const generateId = () => {
         const maxId = persons.length>0
             ? Math.max(...persons.map(p=>p.id))
@@ -54,6 +58,7 @@ app.post('/api/persons', (req, res)=>{
         res.status(403).send({error: "name must be unique"})
     } else {
         res.json(new_person)
+        console.log(persons.concat(new_person))
     }
 })
 
@@ -70,12 +75,14 @@ app.get('/api/persons/:id', (req, res)=>{
 
 app.delete('/api/persons/:id', (req, res)=>{
     const id = Number(req.params.id)
-    const deleteId = persons.findIndex((person)=>person.id === id)
+    const deletedId = persons.findIndex((person)=>person.id === id)
+    const deletedPerson = persons.find((person)=>person.id === id)
 
     if ( deletedId === -1){
         res.status(404).end()
     } else {
-        res.json({message: "person deleted"})
+        res.json(deletedPerson)
+        console.log(persons.filter((person)=>person.id !== id))
     }
 })
 
