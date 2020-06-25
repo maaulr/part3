@@ -46,26 +46,17 @@ app.get('/api/persons', (req, res)=>{
 
 app.post('/api/persons', (req, res)=>{
     const body = req.body
-    const personExist = persons.find((person)=>person.name === body.name)
-    const generateId = () => {
-        const maxId = persons.length>0
-            ? Math.max(...persons.map(p=>p.id))
-            : 0
-        return maxId + 1
-    }
-    const new_person = {
-        name: body.name,
-        number: body.number,
-        id: generateId()
-    }
-
+    
     if (body.name === undefined || body.number === undefined){
         res.status(403).send({error: "content missing"})
-    } else if (personExist !== undefined){
-        res.status(403).send({error: "name must be unique"})
     } else {
-        res.json(new_person)
-        console.log(persons.concat(new_person))
+        const newPerson = new personModel({
+            name: body.name,
+            number: body.number
+        })
+        newPerson.save().then(savedPerson=>{
+            res.json(savedPerson)
+        })
     }
 })
 
