@@ -72,16 +72,15 @@ app.get('/api/persons/:id', (req, res)=>{
 })
 
 app.delete('/api/persons/:id', (req, res)=>{
-    const id = Number(req.params.id)
-    const deletedId = persons.findIndex((person)=>person.id === id)
-    const deletedPerson = persons.find((person)=>person.id === id)
+    const id = req.params.id
+    let deletedPerson = ''
+    const findPerson = personModel.findById(id).then(person=>{
+        deletedPerson = person
+    })
 
-    if ( deletedId === -1){
-        res.status(404).end()
-    } else {
+    personModel.findByIdAndRemove(id).then(result=>{
         res.json(deletedPerson)
-        console.log(persons.filter((person)=>person.id !== id))
-    }
+    }).catch(error=>console.log(error))
 })
 
 app.get('/info', (req, res)=>{
