@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-const db_name = 'fullstack-phonebook-test'
+const db_name = 'fullstack-phonebook'
 
 if (process.argv.length < 3) {
     process.exit(1)
