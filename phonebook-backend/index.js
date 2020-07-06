@@ -79,7 +79,6 @@ app.delete('/api/persons/:id', (req, res)=>{
     })
 
     personModel.findByIdAndRemove(id).then(result=>{
-        console.log(result)
         res.json(deletedPerson)
     }).catch(error=>console.log(error))
 })
