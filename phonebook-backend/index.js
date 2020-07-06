@@ -79,8 +79,25 @@ app.delete('/api/persons/:id', (req, res)=>{
     })
 
     personModel.findByIdAndRemove(id).then(result=>{
+        console.log(result)
         res.json(deletedPerson)
     }).catch(error=>console.log(error))
+})
+
+app.put('/api/persons/:id', (req, res)=>{
+    const id = req.params.id
+    const body = req.body
+
+    const updatePersonData = {
+        name: body.name,
+        number: body.number
+    }
+
+    personModel.findByIdAndUpdate(id, updatePersonData, {new: true})
+    .then(updatedPerson=>{
+        res.json(updatedPerson.toJSON())
+    })
+    .catch(err=>console.log(err))
 })
 
 app.get('/info', (req, res)=>{
