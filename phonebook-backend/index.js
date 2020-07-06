@@ -1,13 +1,13 @@
 require('dotenv').config()
 const express = require('express')
-const mongoose = require('mongoose')
+// const mongoose = require('mongoose')
 const morgan = require('morgan')
 const cors = require('cors')
 const app = express()
 const PORT = process.env.PORT || 3001
-const baseUrl = '/api/persons'
-const dbUrl = process.env.MONGODB_URI
-const dbName = 'fullstack-phonebook'
+// const baseUrl = '/api/persons'
+// const dbUrl = process.env.MONGODB_URI
+// const dbName = 'fullstack-phonebook'
 const personModel = require('./models/person')
 
 app.use(express.json())
@@ -17,23 +17,23 @@ app.use(express.static('build'))
 
 let persons = [
     {
-        name: "Arto Hellas",
-        number: "040123456",
+        name: 'Arto Hellas',
+        number: '040123456',
         id: 1
     },
     {
-        name: "Ada Lovelace",
-        number: "39445323523",
+        name: 'Ada Lovelace',
+        number: '39445323523',
         id: 2
     },
     {
-        name: "Dan Abramov",
-        number: "1243234325",
+        name: 'Dan Abramov',
+        number: '1243234325',
         id: 3
     },
     {
-        name: "Mary Poppendieck",
-        number: "39236423122",
+        name: 'Mary Poppendieck',
+        number: '39236423122',
         id: 4
     },
 ]
@@ -48,7 +48,7 @@ app.post('/api/persons', (req, res, next)=>{
     const body = req.body
     
     if (body.name === undefined || body.number === undefined){
-        res.status(403).send({error: "content missing"})
+        res.status(403).send({error: 'content missing'})
     } else {
         const newPerson = new personModel({
             name: body.name,
@@ -57,7 +57,7 @@ app.post('/api/persons', (req, res, next)=>{
         newPerson.save().then(savedPerson=>{
             res.json(savedPerson)
         })
-        .catch(error=>next(error))
+            .catch(error=>next(error))
     }
 })
 
@@ -84,7 +84,7 @@ app.delete('/api/persons/:id', (req, res)=>{
     }).catch(error=>console.log(error))
 })
 
-app.put('/api/persons/:id', (req, res)=>{
+app.put('/api/persons/:id', (req, res, next)=>{
     const id = req.params.id
     const body = req.body
 
@@ -94,10 +94,10 @@ app.put('/api/persons/:id', (req, res)=>{
     }
 
     personModel.findByIdAndUpdate(id, updatePersonData, {new: true})
-    .then(updatedPerson=>{
-        res.json(updatedPerson.toJSON())
-    })
-    .catch(error=>next(error))
+        .then(updatedPerson=>{
+            res.json(updatedPerson.toJSON())
+        })
+        .catch(error=>next(error))
 })
 
 app.get('/info', (req, res)=>{
